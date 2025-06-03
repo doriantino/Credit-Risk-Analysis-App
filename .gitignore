@@ -1,0 +1,18 @@
+# Fichiers et dossiers spécifiques à l'IDE PyCharm
+.idea/
+
+# Environnement virtuel Python
+.venv/
+
+# Fichiers de cache générés par Python
+__pycache__/
+*.pyc
+
+# Fichiers de données volumineux ou modèles entraînés qui ne devraient pas être versionnés
+# Décommentez les lignes suivantes si vous avez de gros fichiers modèles (ex: plus de quelques Mo)
+# dans le dossier 'model' qui ne devraient pas être directement dans Git.
+# Si 'model' est un fichier .py, ne rien décommenter ici pour 'model'.
+# Si 'model' est un dossier contenant de gros fichiers, alors précisez les extensions.
+# Exemple si vous avez un fichier 'Credit_App/model/my_model.pkl':
+# model/*.pkl
+# model/*.h5
