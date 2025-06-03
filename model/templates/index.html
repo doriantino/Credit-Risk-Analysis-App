@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Risk Credit Analysis App</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* Style de la pop-up */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+
+    .popup h2 {
+      margin-top: 0;
+      color: #FFC000;
+    }
+
+    .popup p {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+
+    .popup button {
+      background-color: #FFC000;
+      color: #333;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .popup button:hover {
+      background-color: #E6AC00;
+    }
+
+    .popup.show {
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-section">
+      <h1>Profitez de vos simulations de crédit</h1>
+    </div>
+    <div class="right-section">
+      <form id="predictionForm" action="{{ url_for('predict')}}"method="post">
+        <input type="number" name="Credit_History" placeholder="Historique des crédits" required="required" value="1"/>
+        <input type="number" name="ApplicantIncome" placeholder="Revenu annuel du demandeur" required="required" value="50000"/>
+        <input type="number" name="LoanAmount" placeholder="Montant du prêt" required="required" value="200000"/>
+        <input type="number" name="CoapplicantIncome" placeholder="Revenu du conjoint (si applicable)" required="required" value="0"/>
+        <input type="number" name="Property_Area_Semiurban" placeholder="Zone de propriété : Semi-urbaine" required="required" value="1"/>
+        <input type="number" name="Loan_Amount_Term" placeholder="Durée du prêt" required="required" value="360"/>
+
+        <button type="submit" class="btn predict-btn">Predict</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="predictionPopup" class="popup">
+    <h2 id="predictionTitle">Résultat de la Prédiction</h2>
+    <p id="predictionMessage"></p>
+    <button id="closePopup">Fermer</button>
+  </div>
+
+  <script>
+    const form = document.getElementById('predictionForm');
+    const popup = document.getElementById('predictionPopup');
+    const predictionMessage = document.getElementById('predictionMessage');
+    const closeButton = document.getElementById('closePopup');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+
+      fetch('/predict', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        predictionMessage.textContent = 'Prédiction : ' + data.prediction;
+        popup.classList.add('show');
+      })
+      .catch(error => {
+        console.error('Erreur lors de l\'envoi du formulaire:', error);
+        predictionMessage.textContent = "Erreur lors de la prédiction.";
+        popup.classList.add('show');
+      });
+    });
+
+    closeButton.addEventListener('click', function() {
+      popup.classList.remove('show');
+    });
+  </script>
+
+</body>
+</html>
